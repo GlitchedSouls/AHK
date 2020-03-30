@@ -35,6 +35,8 @@ InvDrop(x) {
     ; center of first inventory slot
     X1 := 1477 ;X coordinate -----------------------------------------------------<<<<<<
     Y1 := 769 ;Y coordinate  -----------------------------------------------------<<<<<<
+    X2 := 0
+    Y2 := 0
     Loop, %x% {
         X3 := X2 * 42 ;distance from center of 2 slots on the X axis -------------<<<<<<
         Y3 := Y2 * 36 ;distance from center of 2 slots on the Y axis -------------<<<<<<
