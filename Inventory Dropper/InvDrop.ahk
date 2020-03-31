@@ -5,30 +5,32 @@
 ;             https://github.com/GlitchedSouls           |
 ;                                                        |
 ;························································|
-;                                                        |
 ; Description: Drops items in OSRS from inventory        |
 ;              Left to Right and Top to Bottom           |
 ;              Same way you read                         |
 ;                                                        |
 ;························································|
-;                                                        |
 ; USAGE: ·Enable Shift-Click Dropping in OSRS            |
 ;        ·Add to top of YOUR script:                     |
 ;             SetWorkingDir %A_ScriptDir%                |
 ;             #Include RandomBezier.ahk                  |
 ;             #Include InvDrop.ahk                       |
 ;        ·Call the drop script in YOUR OWN script with:  |
-;             InvDrop(N)                                 |
+;             InvDrop(N,O)                               |
 ;        (N should be replaced with the ammount to drop) |
+;        (O is Optional and is used to change pattern)   |
 ;                                                        |
 ;························································|
+; PATTERNS: 0 = Left to right (Default)                  |
+;           1 = Top to Bottom                            |
 ;                                                        |
+;························································|
 ; EXAMPLE: InvDrop(27) ; this will drop everything       |
 ;                        but the last slot               |
 ;________________________________________________________|
 ;________________________________________________________|
 
-InvDrop(x) {
+InvDrop(x, y:=0) {
     Random, s, 100, 275
     Sleep, s
     SendEvent {LShift Down}
@@ -37,6 +39,9 @@ InvDrop(x) {
     Y1 := 769 ;Y coordinate  -----------------------------------------------------<<<<<<
     X2 := 0
     Y2 := 0
+    If (y != 0) && (y != 1) {
+        y:= 0
+    }
     Loop, %x% {
         X3 := X2 * 42 ;distance from center of 2 slots on the X axis -------------<<<<<<
         Y3 := Y2 * 36 ;distance from center of 2 slots on the Y axis -------------<<<<<<
@@ -49,11 +54,16 @@ InvDrop(x) {
         Sleep, k
         Click
         Sleep, l
-        If (X2 < 3) {
+        If (X2 < 3) && (y == 0) {
             X2++
-        } Else {
+        } Else If (y == 0) {
             X2 := 0
             Y2++
+        } Else If (Y2 < 6) && (y == 1) {
+            Y2++
+        } Else {
+            Y2 := 0
+            X2++
         }
 
     }
