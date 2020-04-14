@@ -31,25 +31,28 @@
 ;________________________________________________________|
 
 InvDrop(x, y:=0) {
-    Random, s, 100, 275
-    Sleep, s
+    Sleep, 50
+    Random, s, 65, 275
     SendEvent {LShift Down}
     ; center of first inventory slot
     X1 := 1477 ;X coordinate -----------------------------------------------------<<<<<<
     Y1 := 769 ;Y coordinate  -----------------------------------------------------<<<<<<
     X2 := 0
     Y2 := 0
-    If (y != 0) && (y != 1) {
+    If (y != 1) {
         y:= 0
     }
+    Sleep, s
     Loop, %x% {
         X3 := X2 * 42 ;distance from center of 2 slots on the X axis -------------<<<<<<
         Y3 := Y2 * 36 ;distance from center of 2 slots on the Y axis -------------<<<<<<
-        Random, g, -15, 15
-        Random, h, -15, 15
+        Random, g, -13, 13
+        Random, h, -13, 13
         Random, j, 100, 250
-        Random, k, 85, 250
+        Random, k, 85, 140
         Random, l, 95, 190
+        Random, m, 9, 19
+        SetMouseDelay, m
         RandomBezier(0, 0, X1+X3+g, Y1+Y3+h, "RO T" j " OT10 OB10 OL10 OR10 P3")
         Sleep, k
         Click
