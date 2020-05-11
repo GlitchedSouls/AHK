@@ -1,6 +1,8 @@
 
 My AHK Files
 
+![GlitchedSoul](https://img.shields.io/badge/Discord-GlitchedSoul%235555-7289DA?style=flat-square&logo=Discord)
+
 All scripts require RandomBezier:
 https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier
 
