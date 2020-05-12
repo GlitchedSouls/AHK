@@ -4,7 +4,7 @@ SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
 
 ;!!!!!!Put your #Include files above here!!!!!!
-localVersion:=2
+localVersion:=3
 IniWrite, %localVersion%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Version
 If FileExist("C:\Users\" A_UserName "\OSRS Script Picker.ini") {
 } Else {
@@ -12,6 +12,7 @@ If FileExist("C:\Users\" A_UserName "\OSRS Script Picker.ini") {
     IniWrite, f2, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkExitApp
     IniWrite, 0, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Time
     IniWrite, Select One, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, DefaultScript
+    IniWrite, 0, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Adv
 }
 UrlDownloadToFile,https://raw.githubusercontent.com/GlitchedSouls/AHK/master/GUI/version.txt,C:\Users\%A_UserName%\SPversion.txt
 FileReadLine, Oversion, C:\Users\%A_UserName%\SPversion.txt,1
@@ -19,6 +20,10 @@ If (Oversion<=localVersion) {
     updateAvailable:="+Hide"
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+IniRead, EnableAdv, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Adv, 0
+If (EnableAdv=0) {
+    notEnabled:="+Disabled"
+}
 IniRead, DefaultScript, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, DefaultScript, Select One
 IniRead, Hk, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkReload, f1
 IniRead, Hk2, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkExitApp, f2
@@ -50,14 +55,14 @@ Gui Add, Edit, x168 y120 w256 h129 +ReadOnly -VScroll +Disabled
 Gui Add, Edit, x168 y120 w256 h25 +ReadOnly -VScroll +Disabled
 Gui Add, Edit, x16 y120 w153 h65 +ReadOnly -VScroll +Disabled
 Gui Add, Edit, x16 y184 w153 h65 +ReadOnly -VScroll +Disabled
-Gui Add, Slider, x24 y152 w141 h26 +Disabled +0x10, 50
-Gui Add, Text, x56 y128 w33 h20 +0x200 +Disabled, Offset:
-Gui Add, Text, x96 y128 w43 h23 +0x200 +Disabled, 0
-Gui Add, CheckBox, x16 y93 w52 h16 +Disabled, Enable
-Gui Add, CheckBox, x184 y160 w109 h33 +Disabled, Attempt log out when timer expires
+Gui Add, Slider, vOffset gSlider x24 y152 w141 h26 +Disabled ToolTipBottom Range-10-10 +0x10, 0
+Gui Add, Text, vOffsetText x56 y128 w33 h20 +0x200 +Disabled, Offset:
+Gui Add, Text, vOffsetValue x96 y128 w43 h23 +0x200 +Disabled, 0
+Gui Add, CheckBox, vEnableAdv gEnableAdv x16 y93 w52 h16 , Enable
+Gui Add, CheckBox, vLogOut x184 y160 w109 h33 %notEnabled%, Attempt log out when timer expires
 Gui Add, Text, x304 y152 w2 h91 +0x1 +0x10
-Gui Add, Text, x256 y125 w85 h16 +0x200 +Disabled +Center, Options
-Gui Add, Button, x320 y208 w80 h23 +Disabled, &Help!
+Gui Add, Text, vOptions x256 y125 w85 h16 +0x200 %notEnabled% +Center, Options
+Gui Add, Button, gHelp x320 y208 w80 h23 %notEnabled%, &Help!
 Gui Add, Text, x16 y16 w75 h23 +0x200, Reload Hotkey:
 Gui Add, Text, x16 y48 w75 h23 +0x200, ExitApp Hotkey:
 Gui Add, DropDownList, hWndhDDLItems vDDLItems x280 y16 w147, %DDScript% 
@@ -67,8 +72,8 @@ Gui Add, Button, hWndhBtnStart vBtnStart ggBtnStart x24 y264 w80 h23, &Start
 Gui Add, Button, hWndhBtnCancel vBtnCancel ggBtnCancel x336 y264 w80 h23, &Cancel
 Gui Add, Button, hWndhBtnResetToDefault vBtnResetToDefault ggBtnResetToDefault x224 y264 w104 h23, &Reset to Default
 Gui Add, Button, hWndhBtnSaveAsDefault vBtnSaveAsDefault ggBtnSaveAsDefault x112 y264 w104 h23, &Save as Default
-Gui Add, CheckBox, x184 y200 w92 h23 +Disabled, Enable Logging
-Gui Add, CheckBox, x312 y160 w104 h33 +Disabled, Disable Automatic Update Checks
+Gui Add, CheckBox, vlogging x184 y200 w92 h23 %notEnabled%, Enable Logging
+Gui Add, CheckBox, vupdatecheck x312 y160 w104 h33 %notEnabled%, Disable Automatic Update Checks
 Gui Add, Text, x48 y192 w41 h18 +0x200, Version:
 Gui Add, Text, x96 y192 w38 h19 +0x200, %version%
 Gui Add, Hotkey, hWndhHk vHk x112 y16 w49 h21, %Hk%
@@ -132,7 +137,6 @@ If (DDLItems=Script12){
     ;Put a function or script here
 }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Goto, GuiReload
 Return
 
 gBtnResetToDefault:
@@ -150,6 +154,7 @@ gBtnSaveAsDefault:
     Gui,submit,NoHide
     GuiControlGet,Time,,EdtValue
     GuiControlGet,DDLItems,,DDLItems
+    GuiControlGet, isChecked ,, EnableAdv
     IniWrite, %Hk%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkReload
     IniWrite, %Hk2%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkExitApp
     IniWrite, %Time%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Time
@@ -158,8 +163,29 @@ gBtnSaveAsDefault:
     SetTimer, deletetooltip, 2000
 Return
 
+EnableAdv:
+    Gui,submit,NoHide
+    GuiControlGet, isChecked ,, EnableAdv
+    GuiControl,Enable%isChecked%, updatecheck
+    GuiControl,Enable%isChecked%, logging
+    GuiControl,Enable%isChecked%, LogOut
+    GuiControl,Enable%isChecked%, OffsetText
+    GuiControl,Enable%isChecked%, Offset
+    GuiControl,Enable%isChecked%, OffsetValue
+    GuiControl,Enable%isChecked%, Options   
+return
+
+Slider:
+GuiControlGet, OffsetValue ,, Offset
+GuiControl,,OffsetValue,%OffsetValue%
+return
+
 deletetooltip:
 ToolTip
+return
+
+Help:
+;https://www.youtube.com/watch?v=dQw4w9WgXcQ
 return
 
 GuiReload:
