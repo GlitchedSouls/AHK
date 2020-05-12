@@ -65,7 +65,7 @@ Gui,submit
 GuiControlGet,Time,,EdtValue
 GuiControlGet,DDLItems,,DDLItems
 If (DDLItems="Select one") {
-    MsgBox,,,You must select a scripts
+    MsgBox,,,You must select a script!
     Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul#5555
     return
 }
