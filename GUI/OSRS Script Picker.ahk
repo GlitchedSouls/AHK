@@ -55,7 +55,7 @@ Gui Add, Edit, hWndhEdtValue vEdtValue x280 y48 w146 h22 +Number, %Time%
 Gui Add, Text, x192 y80 w242 h2 +0x10
 Gui Add, Text, x192 y8 w242 h2 +0x10
 Gui Add, Text, x192 y8 w2 h74 +0x1 +0x10
-Gui Add, Text, x432 y8 w1 h72 +0x1 +0x10
+Gui Add, Text, x432 y8 w2 h74 +0x1 +0x10
 
 Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul#5555
 Return
