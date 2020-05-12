@@ -9,7 +9,7 @@ If FileExist("C:\Users\" A_UserName "\OSRS Script Picker.ini") {
 } Else {
     IniWrite, f1, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkReload
     IniWrite, f2, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, HkExitApp
-    IniWrite, None, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Time
+    IniWrite, 0, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Time
     IniWrite, Select One, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, DefaultScript
 }
 
@@ -66,6 +66,7 @@ GuiControlGet,Time,,EdtValue
 GuiControlGet,DDLItems,,DDLItems
 If (DDLItems="Select one") {
     MsgBox,,,You must select a scripts
+    Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul#5555
     return
 }
 If (Time<0) {
