@@ -22,14 +22,14 @@ Script1:="WC" ;Change the name to the skill/activity
 Script2:="FM" ;Change the name to the skill/activity
 Script3:="Fletching" ;Change the name to the skill/activity
 Script4:="GlassBlowing" ;Change the name to the skill/activity
-Script5:=
-Script6:=
-Script7:=
-Script8:=
-Script9:=
-Script10:=
-Script11:=
-Script12:=
+Script5:=""
+Script6:=""
+Script7:=""
+Script8:=""
+Script9:=""
+Script10:=""
+Script11:=""
+Script12:=""
 DDScript:=DefaultScript "||" Script1 "|" Script2 "|" Script3 "|" Script4 ;"|" Script5 ;"|" Script6 ;"|" Script7 ;"|" Script8 ;"|" Script9 ;"|" Script10 ;"|" Script11 ;"|" Script12
                                                                             ;Uncomment the scrripts you want to use
                                                                             ;Comment the scrripts you dont want to use
@@ -57,7 +57,7 @@ Gui Add, Text, x192 y8 w242 h2 +0x10
 Gui Add, Text, x192 y8 w2 h74 +0x1 +0x10
 Gui Add, Text, x432 y8 w2 h74 +0x1 +0x10
 
-Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul#5555
+Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul
 Return
 
 gBtnStart:
@@ -66,7 +66,7 @@ GuiControlGet,Time,,EdtValue
 GuiControlGet,DDLItems,,DDLItems
 If (DDLItems="Select one") {
     MsgBox,,,You must select a script!
-    Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul#5555
+    Gui Show, w440 h127, OSRS Script Picker by GlitchedSoul
     return
 }
 If (Time<0) {
