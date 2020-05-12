@@ -209,7 +209,7 @@ gBtnSaveAsDefault:
     IniWrite, %isDisabled%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, UpdateCheckDisabled
     IniWrite, %OffsetValue%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Offset
     ToolTip, Saved
-    SetTimer, deletetooltip, 2000
+    SetTimer, deletetooltip, -2000
 Return
 
 EnableAdv:
