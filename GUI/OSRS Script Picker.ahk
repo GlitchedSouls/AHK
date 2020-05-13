@@ -20,8 +20,11 @@ If (isDisabled=1) {
     updateAvailable:="+Hide"
     updateCK:="+Checked"
 } else {
-    UrlDownloadToFile,https://raw.githubusercontent.com/GlitchedSouls/AHK/master/GUI/version.txt,C:\Users\%A_UserName%\SPversion.txt
-    FileReadLine, Oversion, C:\Users\%A_UserName%\SPversion.txt,1
+    request := comobjcreate("WinHttp.WinHttpRequest.5.1")
+    request.open("GET", "https://raw.githubusercontent.com/GlitchedSouls/AHK/master/GUI/version.txt")
+    request.send()
+    Oversion:=request.responsetext
+    StringTrimRight, Oversion, Oversion, 1
     If (Oversion<=localVersion) {
         updateAvailable:="+Hide"
     }
