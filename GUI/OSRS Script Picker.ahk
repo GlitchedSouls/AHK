@@ -4,6 +4,9 @@ SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
 
 ;!!!!!!Put your #Include files above here!!!!!!
+OffsetMin:=-10
+OffsetMax:=10
+OffsetMeadian:=Round((OffsetMax+OffsetMin)/2)
 localVersion:=4
 IniWrite, %localVersion%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Version
 If FileExist("C:\Users\" A_UserName "\OSRS Script Picker.ini") {
@@ -13,9 +16,14 @@ If FileExist("C:\Users\" A_UserName "\OSRS Script Picker.ini") {
     IniWrite, 0, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Time
     IniWrite, Select One, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, DefaultScript
     IniWrite, 0, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Adv
+    IniWrite, %OffsetMeadian%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Offset
 }
 IniRead, isDisabled, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, UpdateCheckDisabled,0
 IniRead, OffsetValue, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Offset,0
+If (OffsetValue<OffsetMin) OR (OffsetValue>OffsetMax) {
+    IniWrite, %OffsetMeadian%, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Offset
+    IniRead, OffsetValue, C:\Users\%A_UserName%\OSRS Script Picker.ini, Options, Offset
+}
 If (isDisabled=1) {
     updateAvailable:="+Hide"
     updateCK:="+Checked"
@@ -67,9 +75,9 @@ Gui Add, Edit, x168 y120 w256 h129 +ReadOnly -VScroll +Disabled
 Gui Add, Edit, x168 y120 w256 h25 +ReadOnly -VScroll +Disabled
 Gui Add, Edit, x16 y120 w153 h65 +ReadOnly -VScroll +Disabled
 Gui Add, Edit, x16 y184 w153 h65 +ReadOnly -VScroll +Disabled
-Gui Add, Slider, vOffset gSlider x24 y152 w141 h26 %notEnabled% ToolTipBottom Range-10-10 +0x10, %OffsetValue%
-Gui Add, Text, vOffsetText x56 y128 w33 h20 +0x200 %notEnabled%, Offset:
-Gui Add, Text, vOffsetValue x96 y128 w43 h23 +0x200 %notEnabled%, %OffsetValue%
+Gui Add, Slider, vOffset gSlider x24 y152 w141 h26 %notEnabled% ToolTipBottom Range%OffsetMin%-%OffsetMax% +0x10, %OffsetValue%
+Gui Add, Text, vOffsetText x46 y128 w33 h20 +0x200 %notEnabled%, Offset:
+Gui Add, Text, vOffsetValue x86 y127 w27 h23 +0x200 %notEnabled%, %OffsetValue%
 Gui Add, CheckBox, vEnableAdv gEnableAdv x16 y93 w52 h16 %isChecked%, Enable
 Gui Add, CheckBox, vLogOut x184 y160 w109 h33 %notEnabled%, Attempt log out when timer expires
 Gui Add, Text, x304 y152 w2 h91 +0x1 +0x10
@@ -93,6 +101,7 @@ Gui Add, Hotkey, hWndhHk2 vHk2 x112 y48 w49 h21, %Hk2%
 Gui Add, Edit, hWndhEdtValue vEdtValue x280 y48 w74 h22 +Number , %Time%
 Gui Add, Link, x48 y216 w85 h18 %updateAvailable%, <a href="https://github.com/GlitchedSouls/AHK">Update Available</a>
 Gui Add, Text, x360 y48 w65 h23 +0x200, minutes
+Gui Add, Button, vRandomBtn gRandomBtn x112 y128 w47 h23 %notEnabled%, &Random
 
 Gui Show, w441 h293, OSRS Script Picker by GlitchedSoul
 Return
@@ -215,6 +224,12 @@ gBtnSaveAsDefault:
     SetTimer, deletetooltip, -2000
 Return
 
+RandomBtn:
+    Random,OffsetValue,%OffsetMin%,OffsetMax
+    GuiControl, , Offset, %OffsetValue%
+    GuiControl, , OffsetValue, %OffsetValue%
+return
+
 EnableAdv:
     Gui,submit,NoHide
     GuiControlGet, isChecked ,, EnableAdv
@@ -225,6 +240,7 @@ EnableAdv:
     GuiControl,Enable%isChecked%, Offset
     GuiControl,Enable%isChecked%, OffsetValue
     GuiControl,Enable%isChecked%, Options 
+    GuiControl,Enable%isChecked%, RandomBtn
     if (isChecked=0)  {
         GuiControl, , logging, 0
         GuiControl, , LogOut, 0
